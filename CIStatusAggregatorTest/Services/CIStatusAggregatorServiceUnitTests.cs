@@ -96,6 +96,33 @@ namespace CIStatusAggregator.Services
             mockLocalProcessorMock.Verify(m => m.Serialize(It.IsAny<CIStatus>()), Times.Once);
         }
 
+
+        [Fact]
+        public async Task StartAsync_OnException_Throws()
+        {
+            var appLifetimeMock = Mock.Of<IHostApplicationLifetime>();
+            var loggerMock = Mock.Of<ILogger<CIStatusAggregatorService>>();
+            var mockRemoteProcessorMock = new Mock<IStatusProvider<Task<CIStatus>>>();
+            var mockLocalProcessorMock = Mock.Of<ISerializer>();
+            var units = new[] { new CIStatusAggregatorUnit()
+            {
+                Description = "Mock unit",
+                RemoteProcessor = mockRemoteProcessorMock.Object,
+                LocalProcessor = mockLocalProcessorMock
+            }};
+
+            mockRemoteProcessorMock.Setup(m => m.GetStatus()).Throws<Exception>();
+
+            var sut = new CIStatusAggregatorService(
+                appLifetimeMock,
+                loggerMock,
+                units
+            );
+
+            Func<Task> action = async () => await sut.StartAsync(new CancellationToken());
+            await action.Should().ThrowAsync<Exception>();
+        }
+
     }
 
 }

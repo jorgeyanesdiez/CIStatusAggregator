@@ -73,6 +73,7 @@ namespace CIStatusAggregator.Services
             {
                 var e = tasks.Exception?.Flatten() ?? exc;
                 Logger.LogError("Error: {ExceptionMessage}", e.Message);
+                throw e;
             }
             finally
             {
