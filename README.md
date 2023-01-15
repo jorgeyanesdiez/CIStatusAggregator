@@ -3,7 +3,7 @@
 
 Checks continous integration endpoints to determine whether any project is being built or is broken.
 
-The result is then saved to a file that can be used by [HueUpdater](https://github.com/jorgeyanesdiez/HueUpdater or [TrayLamp](https://github.com/jorgeyanesdiez/TrayLamp.
+The result is then saved to a file that can be used by [HueUpdater](https://github.com/jorgeyanesdiez/HueUpdater) or [TrayLamp](https://github.com/jorgeyanesdiez/TrayLamp).
 
 
 
@@ -24,7 +24,7 @@ AppVeyor status:  [![AppVeyor status](https://ci.appveyor.com/api/projects/statu
 I use lamps at work to give my teams instant feedback about the status of multiple projects tracked by our CI systems.
 
 This application provides the information consumed by the programs that update those lamps.
-See also [HueUpdater](https://github.com/jorgeyanesdiez/HueUpdater and [TrayLamp](https://github.com/jorgeyanesdiez/TrayLamp.
+See also [HueUpdater](https://github.com/jorgeyanesdiez/HueUpdater) and [TrayLamp](https://github.com/jorgeyanesdiez/TrayLamp).
 
 The current version supports Jenkins endpoints only. It connects to each one and aggregates the status values.
 
