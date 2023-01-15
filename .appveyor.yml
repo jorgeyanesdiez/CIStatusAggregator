@@ -12,11 +12,13 @@ build_script:
 - set JAVA_HOME=C:\Program Files\Java\jdk17
 - set PATH=%JAVA_HOME%\bin;%PATH%
 - ps: >-
-    dotnet sonarscanner begin /d:sonar.login="$env:SonarCloudToken" /k:"jorgeyanesdiez_CIStatusAggregator" /d:sonar.cs.opencover.reportsPaths="coverage.xml"
+    dotnet sonarscanner begin /d:sonar.login="$env:SonarCloudToken" /d:sonar.host.url="https://sonarcloud.io" /k:"jorgeyanesdiez_CIStatusAggregator" /o:"jorgeyanesdiez" /d:sonar.cs.opencover.reportsPaths="coverage.xml"
+
 
     dotnet build --no-incremental
 test_script:
 - ps: >-
-    coverlet .\CIStatusAggregatorTest\bin\Debug\net6.0\CIStatusAggregatorTest.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+    coverlet .\CIStatusAggregatorTest\bin\Debug\net6.0\CIStatusAggregatorTest.dll --target "dotnet" --targetargs "test --no-build" -f="opencover" -o="coverage.xml"
+
 
     dotnet sonarscanner end /d:sonar.login="$env:SonarCloudToken"
