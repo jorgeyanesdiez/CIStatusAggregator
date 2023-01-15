@@ -14,6 +14,8 @@ The result is then saved to a file that can be used by [HueUpdater](https://gith
 
 AppVeyor status:  [![AppVeyor status](https://ci.appveyor.com/api/projects/status/q5kb8c19wk27f1n8/branch/main?svg=true)](https://ci.appveyor.com/project/jorgeyanesdiez/CIStatusAggregator)
 
+Sonarcloud status:  [![Sonarcloud status](https://sonarcloud.io/api/project_badges/measure?project=jorgeyanesdiez_CIStatusAggregator&metric=alert_status)](https://sonarcloud.io/dashboard?id=jorgeyanesdiez_CIStatusAggregator)
+
 
 
 
