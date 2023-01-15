@@ -1,13 +1,10 @@
-﻿using System;
-
-namespace CIStatusAggregator.Models
+﻿namespace CIStatusAggregator.Models
 {
 
     /// <summary>
     /// Models the status of a CI system.
     /// </summary>
     public sealed class CIStatus
-        : IEquatable<CIStatus>
     {
 
         /// <summary>
@@ -21,30 +18,6 @@ namespace CIStatusAggregator.Models
         /// </summary>
         public CIBuildStatus BuildStatus { get; set; }
 
-
-        /// <inheritdoc/>
-        public bool Equals(CIStatus other)
-        {
-            var result = other != null
-                && ActivityStatus == other.ActivityStatus
-                && BuildStatus == other.BuildStatus;
-
-            return result;
-        }
-
-
-        /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as CIStatus);
-        }
-
-
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ActivityStatus, BuildStatus);
-        }
     }
 
 }
