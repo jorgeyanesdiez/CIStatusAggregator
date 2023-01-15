@@ -89,13 +89,13 @@ namespace CIStatusAggregator.Services
             if (!string.IsNullOrWhiteSpace(EndpointRemoteSettings.JobNameFilterRegex))
             {
                 Func<string, string, bool> jobFilter = EndpointRemoteSettings.JobNameFilterMode == RegexFilterMode.Blacklist
-                    ? (i, p) => !Regex.IsMatch(i, p)
-                    : (i, p) => Regex.IsMatch(i, p);
+                    ? (i, p) => !Regex.IsMatch(i, p, RegexOptions.None, TimeSpan.FromSeconds(1))
+                    : (i, p) => Regex.IsMatch(i, p, RegexOptions.None, TimeSpan.FromSeconds(1));
 
                 jobs = jobs.Where(j => jobFilter(j.Name, EndpointRemoteSettings.JobNameFilterRegex));
             }
 
-            var colors = jobs.Select(j => j.Color).Where(c => !Regex.IsMatch(c, "^(grey|disabled|aborted|notbuilt)"));
+            var colors = jobs.Select(j => j.Color).Where(c => !Regex.IsMatch(c, "^(grey|disabled|aborted|notbuilt)", RegexOptions.None, TimeSpan.FromSeconds(1)));
             return colors;
         }
 
