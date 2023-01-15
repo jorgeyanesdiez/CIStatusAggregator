@@ -1,0 +1,8 @@
+.sonarqube/
+.vs/
+build/
+packages/
+release/
+**/bin/
+**/obj/
+**/*.user

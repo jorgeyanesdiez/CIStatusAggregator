@@ -1,0 +1,19 @@
+version: '{build}'
+image: Visual Studio 2022
+environment:
+  SonarCloudToken:
+    secure: Mznw9m1tlkSK+e7Q+GHu2yW8eiKeAWi/11Dh723cbL09JzsXY9yQRBfrTB5J7Yj4
+install:
+- ps: dotnet tool install --global dotnet-sonarscanner
+build_script:
+- set JAVA_HOME=C:\Program Files\Java\jdk17
+- set PATH=%JAVA_HOME%\bin;%PATH%
+- ps: >-
+    dotnet sonarscanner begin /d:"sonar.login=$env:SonarCloudToken" /d:"sonar.host.url=https://sonarcloud.io" /k:"jorgeyanesdiez_CIStatusAggregator" /o:"jorgeyanesdiez" /d:"sonar.cs.opencover.reportsPaths=./build/coverage.opencover.xml"
+
+    dotnet build
+test_script:
+- ps: >-
+    dotnet test --results-directory "./build" --logger "trx;LogFileName=tests.vstest.trx" /p:"CollectCoverage=true" /p:"CoverletOutputFormat=opencover" /p:"CoverletOutput=../build/"
+
+    dotnet sonarscanner end /d:"sonar.login=$env:SonarCloudToken"
