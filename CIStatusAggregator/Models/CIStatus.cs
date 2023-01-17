@@ -4,7 +4,7 @@
     /// <summary>
     /// Models the status of a CI system.
     /// </summary>
-    public sealed class CIStatus
+    public class CIStatus
     {
 
         /// <summary>
