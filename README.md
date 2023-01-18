@@ -3,7 +3,8 @@
 
 Checks continous integration endpoints to determine whether any project is being built or is broken.
 
-The result is then saved to a file that can be used by [HueUpdater](https://github.com/jorgeyanesdiez/HueUpdater) or [TrayLamp](https://github.com/jorgeyanesdiez/TrayLamp).
+The result is then saved to a file that can be used by [HueUpdater](https://github.com/jorgeyanesdiez/HueUpdater) or
+[TrayLamp](https://github.com/jorgeyanesdiez/TrayLamp) when exposed with a web server.
 
 
 
@@ -42,6 +43,10 @@ The current version supports Jenkins endpoints only. It connects to each one and
 * Basic JSON and Regex knowledge to edit the settings file.
 
 * Write permission on a local folder to save the status files.
+
+* A web server to expose the status files.
+  Note: If you run this program on the same machine as a Jenkins controller node, you can use its */userContent*
+  directory to serve the files without having to setup a dedicated web server.
 
 
 
@@ -97,16 +102,14 @@ Here's an attempt to explain each one, although I hope most are self explanatory
   Full or relative path used to write out the status for the endpoint.
   
   Write permission will be required to write the file, and it's usually desirable to locate the file in a folder that is shared with a web server.
-  
-  When using Jenkins, it's possible to use the *userContent* folder of your instance to integrate things easily.
 
 
 
-Finally, use your Windows Task Scheduler or alternative scheduling method to run this application frequently.
 
-I usually run it every minute.
 
-That's all there is to it.
+
+Finally, use your preferred scheduling method to run this application frequently.
+I usually run it every minute with the Windows Task Scheduler.
 
 
 
