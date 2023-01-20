@@ -2,7 +2,7 @@
 {
 
     /// <summary>
-    /// Possible states for the build status in CI systems.
+    /// Possible values for <see cref="CIStatus.BuildStatus"/>.
     /// </summary>
     public enum CIBuildStatus
     {

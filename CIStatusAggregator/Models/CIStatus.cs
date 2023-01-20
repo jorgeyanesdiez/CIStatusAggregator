@@ -8,13 +8,13 @@
     {
 
         /// <summary>
-        /// The activity status of the system.
+        /// The activity status of the CI system.
         /// </summary>
         public CIActivityStatus ActivityStatus { get; set; }
 
 
         /// <summary>
-        /// The build status of the system.
+        /// The build status of the CI system.
         /// </summary>
         public CIBuildStatus BuildStatus { get; set; }
 
