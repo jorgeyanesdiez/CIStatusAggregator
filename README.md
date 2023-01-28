@@ -8,9 +8,7 @@ The result is then saved to a file that can be used by [HueUpdater](https://gith
 
 
 
-
-
-
+<br><br>
 ## Build status
 
 AppVeyor status:  [![AppVeyor status](https://ci.appveyor.com/api/projects/status/q5kb8c19wk27f1n8/branch/main?svg=true)](https://ci.appveyor.com/project/jorgeyanesdiez/CIStatusAggregator)
@@ -20,8 +18,7 @@ Sonarcloud status:  [![Sonarcloud status](https://sonarcloud.io/api/project_badg
 
 
 
-
-
+<br><br>
 ## Motivation
 
 I use lamps at work to give my teams instant feedback about the status of multiple projects tracked by our CI systems.
@@ -34,8 +31,7 @@ The current version supports Jenkins endpoints only. It connects to each one and
 
 
 
-
-
+<br><br>
 ## Usage prerequisites
 
 * Operational CI systems and related networking equipment.
@@ -51,23 +47,39 @@ The current version supports Jenkins endpoints only. It connects to each one and
 
 
 
-
-
+<br><br>
 ## Deployment
 
-Unpack the release file wherever you want on the target system. I suggest *C:\CIStatusAggregator*
+Unpack the release file wherever you want on the target system. I suggest *C:\CIStatusAggregator* on Windows or */opt/CIStatusAggregator* on Linux
 
 Open the *appsettings.json* file with a plain text editor and carefully tweak the values to match your needs.
 
-Here's an attempt to explain each one, although I hope most are self explanatory from the provided sample file.
+| :boom: NOTE            |
+|:-----------------------|
+| Be careful to follow JSON formatting rules, or the program will not work correctly |
+
+Here's an attempt to explain each value:
+
 
 
 
 * ***Endpoints***
 
-  A list of endpoint definitions. Each entry defines a CI system to check and a file to write the status to.
+  It is a list and it contains endpoint definitions. Each entry in the list defines a CI system to check and a file to write the status to.
 
 
+```javascript
+{
+  "Endpoints": [
+     // endpoint definitions go in here
+  ]
+}
+
+```
+<br>
+
+
+Each endpoint definition has the following properties:
 
 * **Endpoint** -> **Meta** -> ***Description***
 
@@ -89,11 +101,11 @@ Here's an attempt to explain each one, although I hope most are self explanatory
 
 * **Endpoint** -> **Remote** -> ***JobNameFilterMode***
 
-  Only applicable when *JobNameFilterRegex* is defined. May be "Blacklist" or "Whitelist".
+  Only applicable when *JobNameFilterRegex* is defined. May be *Blacklist* or *Whitelist*.
 
-  When "Blacklist", all jobs that match *JobNameFilterRegex* are excluded from the result.
+  When *Blacklist*, all jobs that match *JobNameFilterRegex* are excluded from the result.
 
-  When "Whitelist", only jobs that match *JobNameFilterRegex* are included in the result.
+  When *Whitelist*, only jobs that match *JobNameFilterRegex* are included in the result.
 
 
 
@@ -102,10 +114,46 @@ Here's an attempt to explain each one, although I hope most are self explanatory
   Full or relative path used to write out the status for the endpoint.
   
   Write permission will be required to write the file, and it's usually desirable to locate the file in a folder that is shared with a web server.
+<br>
 
 
+Here's an endpoint definition that ***ONLY*** checks the jobs that contain the word ***build*** in their name and saves the outcome to the file *status/build.json*.
+```javascript
+  {
+    "Meta": {
+      "Description": "Build jobs"
+    },
+    "Remote": {
+      "BaseUrl": "https://jenkins.example",
+      "JobNameFilterRegex": "build",
+      "JobNameFilterMode": "Whitelist"
+    },
+    "Local": {
+      "StatusFilePath": "status/build.json"
+    }
+  }
+```
+<br>
 
 
+Here's an endpoint definition that checks all the jobs that *DO NOT* contain the word ***build*** in their name and saves the outcome to the file *status/deploy.json*.
+```javascript
+  {
+    "Meta": {
+      "Description": "Deployment jobs"
+    },
+    "Remote": {
+      "BaseUrl": "https://jenkins.example",
+      "JobNameFilterRegex": "build",
+      "JobNameFilterMode": "Blacklist"
+    },
+    "Local": {
+      "StatusFilePath": "status/deploy.json"
+    }
+  }
+```
+
+<br>
 
 
 Finally, use your preferred scheduling method to run this application frequently.
@@ -113,9 +161,7 @@ I usually run it every minute with the Windows Task Scheduler or with a systemd 
 
 
 
-
-
-
+<br><br>
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
