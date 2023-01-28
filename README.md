@@ -109,7 +109,7 @@ Here's an attempt to explain each one, although I hope most are self explanatory
 
 
 Finally, use your preferred scheduling method to run this application frequently.
-I usually run it every minute with the Windows Task Scheduler.
+I usually run it every minute with the Windows Task Scheduler or with a systemd timer.
 
 
 
