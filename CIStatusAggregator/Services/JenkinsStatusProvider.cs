@@ -81,6 +81,9 @@ namespace CIStatusAggregator.Services
         /// <returns>The collection of colors.</returns>
         public async Task<IEnumerable<string>> GetJobColorsAsync()
         {
+            var r = RegexOptions.None;
+            var t = TimeSpan.FromSeconds(1);
+
             var baseUri = new Uri(EndpointRemoteSettings.BaseUrl);
             var endpoint = new Uri(baseUri, "/api/json").ToString();
             var response = await endpoint.WithTimeout(5).GetJsonAsync<JenkinsOverview>();
@@ -89,13 +92,13 @@ namespace CIStatusAggregator.Services
             if (!string.IsNullOrWhiteSpace(EndpointRemoteSettings.JobNameFilterRegex))
             {
                 Func<string, string, bool> jobFilter = EndpointRemoteSettings.JobNameFilterMode == RegexFilterMode.Blacklist
-                    ? (i, p) => !Regex.IsMatch(i, p, RegexOptions.None, TimeSpan.FromSeconds(1))
-                    : (i, p) => Regex.IsMatch(i, p, RegexOptions.None, TimeSpan.FromSeconds(1));
+                    ? (i, p) => !Regex.IsMatch(i, p, r, t)
+                    : (i, p) => Regex.IsMatch(i, p, r, t);
 
                 jobs = jobs.Where(j => jobFilter(j.Name, EndpointRemoteSettings.JobNameFilterRegex));
             }
 
-            var colors = jobs.Select(j => j.Color).Where(c => !Regex.IsMatch(c, "^(grey|disabled|aborted|notbuilt)", RegexOptions.None, TimeSpan.FromSeconds(1)));
+            var colors = jobs.Select(j => j.Color).Where(c => !Regex.IsMatch(c, "^(grey|disabled|aborted|notbuilt)", r, t));
             return colors;
         }
 

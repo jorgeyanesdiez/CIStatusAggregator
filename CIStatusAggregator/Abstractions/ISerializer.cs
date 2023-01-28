@@ -8,11 +8,11 @@
     {
 
         /// <summary>
-        /// Writes the given instance.
+        /// Writes the given object.
         /// </summary>
-        /// <typeparam name="TInput">The type of the object to write.</typeparam>
-        /// <param name="input">The instance to write.</param>
-        void Serialize<TInput>(TInput input) where TInput : new();
+        /// <typeparam name="TObject">The type of the object to write.</typeparam>
+        /// <param name="input">The object to write.</param>
+        void Serialize<TObject>(TObject input) where TObject : new();
 
     }
 

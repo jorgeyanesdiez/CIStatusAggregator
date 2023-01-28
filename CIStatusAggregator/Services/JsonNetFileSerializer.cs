@@ -33,7 +33,7 @@ namespace CIStatusAggregator.Services
 
 
         /// <inheritdoc/>
-        public void Serialize<TInput>(TInput input) where TInput : new()
+        public void Serialize<TObject>(TObject input) where TObject : new()
         {
             var contents = JsonConvert.SerializeObject(input);
             using var writer = new StreamWriter(FilePath);
