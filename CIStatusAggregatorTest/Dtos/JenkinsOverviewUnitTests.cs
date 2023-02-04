@@ -5,7 +5,7 @@ namespace CIStatusAggregator.Dtos
 {
 
     [Trait("TestType", "Unit")]
-    public class JenkinsOverviewTests
+    public class JenkinsOverviewUnitTests
     {
 
         [Fact]

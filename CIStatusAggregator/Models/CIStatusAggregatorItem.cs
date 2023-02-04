@@ -7,11 +7,11 @@ namespace CIStatusAggregator.Models
     /// <summary>
     /// Represents the components required to process each defined endpoint.
     /// </summary>
-    public class CIStatusAggregatorUnit
+    public class CIStatusAggregatorItem
     {
 
         /// <summary>
-        /// Arbitrary description of this unit.
+        /// Arbitrary description of this item.
         /// </summary>
         public string Description { get; set; }
 

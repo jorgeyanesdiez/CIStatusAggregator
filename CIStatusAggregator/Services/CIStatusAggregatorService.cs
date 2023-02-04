@@ -30,9 +30,9 @@ namespace CIStatusAggregator.Services
 
 
         /// <summary>
-        /// The endpoint units to process.
+        /// The endpoint items to process.
         /// </summary>
-        private IEnumerable<CIStatusAggregatorUnit> Units { get; }
+        private IEnumerable<CIStatusAggregatorItem> Items { get; }
 
 
         /// <summary>
@@ -40,45 +40,48 @@ namespace CIStatusAggregator.Services
         /// </summary>
         /// <param name="appLifetime">The value for the <see cref="AppLifetime"/> property.</param>
         /// <param name="logger">The value for the <see cref="Logger"/> property.</param>
-        /// <param name="units">The value for the <see cref="Units"/> property.</param>
+        /// <param name="items">The value for the <see cref="Items"/> property.</param>
         public CIStatusAggregatorService(
             IHostApplicationLifetime appLifetime,
             ILogger<CIStatusAggregatorService> logger,
-            IEnumerable<CIStatusAggregatorUnit> units
+            IEnumerable<CIStatusAggregatorItem> items
         )
         {
             AppLifetime = appLifetime ?? throw new ArgumentNullException(nameof(appLifetime));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            Units = units ?? throw new ArgumentNullException(nameof(units));
-            if (!units.Any()) { throw new ArgumentOutOfRangeException(nameof(units)); }
+            Items = items ?? throw new ArgumentNullException(nameof(items));
+            if (!items.Any()) { throw new ArgumentOutOfRangeException(nameof(items)); }
         }
 
 
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken _)
         {
-            var tasks = Task.WhenAll(Units.Select(async unit =>
-            {
-                Logger.LogInformation("Processing unit [{UnitDescription}].", unit.Description);
-                var status = await unit.RemoteProcessor.GetStatus();
-                unit.LocalProcessor.Serialize(status);
-                Logger.LogInformation("Unit [{UnitDescription}] processed successfully.", unit.Description);
-            }));
-
-            try
-            {
-                await tasks;
-            }
+            var processTask = ProcessItemsAsync();
+            try { await processTask; }
             catch (Exception exc)
             {
-                var e = tasks.Exception?.Flatten() ?? exc;
+                var e = processTask.Exception?.Flatten() ?? exc;
                 Logger.LogError("Error: {ExceptionMessage}", e.Message);
                 throw e;
             }
-            finally
+            finally { AppLifetime.StopApplication(); }
+        }
+
+
+        /// <summary>
+        /// Orchestrates services to process each defined item.
+        /// </summary>
+        /// <returns>The task context.</returns>
+        public Task ProcessItemsAsync()
+        {
+            return Task.WhenAll(Items.Select(async item =>
             {
-                AppLifetime.StopApplication();
-            }
+                Logger.LogInformation("Processing item [{ItemDescription}].", item.Description);
+                var status = await item.RemoteProcessor.GetStatus();
+                item.LocalProcessor.Serialize(status);
+                Logger.LogInformation("Item [{ItemDescription}] processed successfully.", item.Description);
+            }));
         }
 
     }

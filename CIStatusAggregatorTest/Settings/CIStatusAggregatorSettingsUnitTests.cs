@@ -5,13 +5,13 @@ namespace CIStatusAggregator.Settings
 {
 
     [Trait("TestType", "Unit")]
-    public class AppSettingsTests
+    public class CIStatusAggregatorSettingsUnitTests
     {
 
         [Fact]
         public void Endpoints_ByDefault_IsNotNull()
         {
-            var sut = new AppSettings();
+            var sut = new CIStatusAggregatorSettings();
             sut.Endpoints.Should().NotBeNull();
         }
 

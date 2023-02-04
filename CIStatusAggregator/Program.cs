@@ -50,10 +50,9 @@ namespace CIStatusAggregator
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    var appSettings = hostContext.Configuration.Get<AppSettings>();
+                    var appSettings = hostContext.Configuration.Get<AppSettings>().CIStatusAggregator;
 
-                    // Services DI
-                    appSettings.Endpoints.ForEach(endpoint => services.AddSingleton(sp => new CIStatusAggregatorUnit()
+                    appSettings.Endpoints.ForEach(endpoint => services.AddSingleton(sp => new CIStatusAggregatorItem()
                     {
                         Description = endpoint.Meta.Description,
                         RemoteProcessor = new JenkinsStatusProvider(endpoint.Remote),
@@ -61,7 +60,6 @@ namespace CIStatusAggregator
                     }));
                     services.AddHostedService<CIStatusAggregatorService>();
 
-                    // Services configuration
                     ConfigureAppServices();
                 })
                 .ConfigureLogging((hostContext, configLogging) =>
