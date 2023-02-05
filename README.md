@@ -8,6 +8,7 @@ The results are then saved to files that can be used by [HueUpdater](https://git
 
 
 
+
 <br><br>
 ## Build status
 
@@ -74,7 +75,6 @@ Here's an attempt to explain each value:
      // endpoint definitions go in here
   ]
 }
-
 ```
 <br>
 
