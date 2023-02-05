@@ -68,15 +68,17 @@ Here's an attempt to explain each value:
 
   It is a list and it contains endpoint definitions. Each entry in the list defines a CI system to check and a file to write the status to.
 
+  <br>
 
-```javascript
-"CIStatusAggregator": {
-  "Endpoints": [
-     // endpoint definitions go in here
-  ]
-}
-```
-<br>
+  ```javascript
+  "CIStatusAggregator": {
+    "Endpoints": [
+      // endpoint definitions go in here
+    ]
+  }
+  ```
+
+  <br>
 
 
 Each endpoint definition has the following properties:
@@ -86,17 +88,14 @@ Each endpoint definition has the following properties:
   Friendly name for the entry. Currently only used for identification in logs.
 
 
-
 * **Endpoint** -> **Remote** -> ***BaseUrl***
 
   Base URL of the CI system to check.
 
 
-
 * **Endpoint** -> **Remote** -> ***JobNameFilterRegex***
 
   Optional regular expression that can be used to filter the jobs that are aggregated.
-
 
 
 * **Endpoint** -> **Remote** -> ***JobNameFilterMode***
@@ -108,17 +107,19 @@ Each endpoint definition has the following properties:
   When *Whitelist*, only jobs that match *JobNameFilterRegex* are included in the result.
 
 
-
 * **Endpoint** -> **Local** -> ***StatusFilePath***
 
   Full or relative path used to write out the status for the endpoint.
   
   Write permission will be required to write the file, and it's usually desirable to locate the file in a folder that is shared with a web server.
-<br>
 
+  <br>
 
-Here's an endpoint definition that ***ONLY*** checks the jobs that contain the word ***build*** in their name and saves the outcome to the file *status/build.json*.
-```javascript
+  Here's an endpoint definition that ***ONLY*** checks the jobs that contain the word ***build*** in their name and saves the outcome to the file *status/build.json*.
+
+  <br>
+
+  ```javascript
   {
     "Meta": {
       "Description": "Build jobs"
@@ -132,12 +133,15 @@ Here's an endpoint definition that ***ONLY*** checks the jobs that contain the w
       "StatusFilePath": "status/build.json"
     }
   }
-```
-<br>
+  ```
 
+  <br>
 
-Here's an endpoint definition that checks all the jobs that *DO NOT* contain the word ***build*** in their name and saves the outcome to the file *status/deploy.json*.
-```javascript
+  Here's an endpoint definition that checks all the jobs that *DO NOT* contain the word ***build*** in their name and saves the outcome to the file *status/deploy.json*.
+
+  <br>
+
+  ```javascript
   {
     "Meta": {
       "Description": "Deployment jobs"
@@ -151,13 +155,14 @@ Here's an endpoint definition that checks all the jobs that *DO NOT* contain the
       "StatusFilePath": "status/deploy.json"
     }
   }
-```
+  ```
 
-<br>
+  <br>
 
 
 Finally, use your preferred scheduling method to run this application frequently.
 I usually run it every minute with the Windows Task Scheduler or with a systemd timer.
+
 
 
 
