@@ -3,7 +3,7 @@
 
 Checks continous integration endpoints to determine whether any project is being built or is broken.
 
-The result is then saved to a file that can be used by [HueUpdater](https://github.com/jorgeyanesdiez/HueUpdater) or
+The results are then saved to files that can be used by [HueUpdater](https://github.com/jorgeyanesdiez/HueUpdater) or
 [TrayLamp](https://github.com/jorgeyanesdiez/TrayLamp) when exposed with a web server.
 
 
@@ -13,7 +13,7 @@ The result is then saved to a file that can be used by [HueUpdater](https://gith
 
 AppVeyor status:  [![AppVeyor status](https://ci.appveyor.com/api/projects/status/q5kb8c19wk27f1n8/branch/main?svg=true)](https://ci.appveyor.com/project/jorgeyanesdiez/CIStatusAggregator)
 
-Sonarcloud status:  [![Sonarcloud status](https://sonarcloud.io/api/project_badges/measure?project=jorgeyanesdiez_CIStatusAggregator&metric=alert_status)](https://sonarcloud.io/dashboard?id=jorgeyanesdiez_CIStatusAggregator)
+Sonarcloud status:  [![Sonarcloud status](https://sonarcloud.io/api/project_badges/measure?project=jorgeyanesdiez_CIStatusAggregator&metric=alert_status)](https://sonarcloud.io/summary/overall?id=jorgeyanesdiez_CIStatusAggregator)
 
 
 
@@ -52,7 +52,7 @@ The current version supports Jenkins endpoints only. It connects to each one and
 
 Unpack the release file wherever you want on the target system. I suggest *C:\CIStatusAggregator* on Windows or */opt/CIStatusAggregator* on Linux
 
-Open the *appsettings.json* file with a plain text editor and carefully tweak the values to match your needs.
+Open the *appsettings.json* file with a plain text editor and carefully tweak the sample values in the *CIStatusAggregator* section to match your needs.
 
 | :boom: NOTE            |
 |:-----------------------|
@@ -69,7 +69,7 @@ Here's an attempt to explain each value:
 
 
 ```javascript
-{
+"CIStatusAggregator": {
   "Endpoints": [
      // endpoint definitions go in here
   ]
