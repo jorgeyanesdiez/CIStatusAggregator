@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>CIStatusAggregator</UserSecretsId>
-    <Version>0.1.0</Version>
     <Authors>Jorge Yanes Diez</Authors>
     <Company>yanes.tech</Company>
     <Nullable>disable</Nullable>
