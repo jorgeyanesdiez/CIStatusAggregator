@@ -6,9 +6,9 @@
     /// </summary>
     public class EndpointSettings
     {
-        public EndpointMetaSettings Meta { get; set; }
-        public EndpointRemoteSettings Remote { get; set; }
-        public EndpointLocalSettings Local { get; set; }
+        public EndpointMetaSettings Meta { get; set; } = new EndpointMetaSettings();
+        public EndpointRemoteSettings Remote { get; set; } = new EndpointRemoteSettings();
+        public EndpointLocalSettings Local { get; set; } = new EndpointLocalSettings();
     }
 
 }

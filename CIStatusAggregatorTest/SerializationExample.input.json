@@ -1,4 +1,1 @@
-{
-  "First": "first",
-  "Second": true
-}
+{"first":"first","second":true,"third":"Third"}

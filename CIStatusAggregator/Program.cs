@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CIStatusAggregator.Factories;
 using CIStatusAggregator.Models;
 using CIStatusAggregator.Services;
 using CIStatusAggregator.Settings;
@@ -9,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace CIStatusAggregator
 {
@@ -52,31 +51,23 @@ namespace CIStatusAggregator
                 {
                     var appSettings = hostContext.Configuration.Get<AppSettings>().CIStatusAggregator;
 
+                    var serializerSettings = NewtonsoftJsonSerializerSettingsFactory.Build();
                     appSettings.Endpoints.ForEach(endpoint => services.AddSingleton(sp => new CIStatusAggregatorItem()
                     {
                         Description = endpoint.Meta.Description,
                         RemoteProcessor = new JenkinsStatusProvider(endpoint.Remote),
-                        LocalProcessor = new JsonNetFileSerializer(endpoint.Local.StatusFilePath)
+                        LocalProcessor = new NewtonsoftJsonFileSerializer(endpoint.Local.StatusFilePath, serializerSettings)
                     }));
-                    services.AddHostedService<CIStatusAggregatorService>();
 
-                    ConfigureAppServices();
+                    FlurlHttp.Configure(s => s.JsonSerializer = new NewtonsoftJsonSerializer(serializerSettings));
+
+                    services.AddHostedService<CIStatusAggregatorService>();
                 })
                 .ConfigureLogging((hostContext, configLogging) =>
                 {
                     configLogging.AddConsole();
                 })
                 .UseConsoleLifetime();
-        }
-
-
-        /// <summary>
-        /// Configures the application services that require it.
-        /// </summary>
-        private static void ConfigureAppServices()
-        {
-            var jsonSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            FlurlHttp.Configure(s => s.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings));
         }
 
     }
