@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CIStatusAggregator", "CIStatusAggregator\CIStatusAggregator.csproj", "{2244BD23-7D45-4EC3-A8D8-910F7C0D394D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CIStatusAggregatorTest", "CIStatusAggregatorTest\CIStatusAggregatorTest.csproj", "{AF98370B-AE1C-4A2E-8753-8F57C5F86694}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CIStatusAggregator.Models", "CIStatusAggregator.Models\CIStatusAggregator.Models.csproj", "{9D21A893-D406-48EA-9D5D-5062DB08CAAC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CIStatusAggregatorTest", "CIStatusAggregatorTest\CIStatusAggregatorTest.csproj", "{AF98370B-AE1C-4A2E-8753-8F57C5F86694}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{2244BD23-7D45-4EC3-A8D8-910F7C0D394D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2244BD23-7D45-4EC3-A8D8-910F7C0D394D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2244BD23-7D45-4EC3-A8D8-910F7C0D394D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D21A893-D406-48EA-9D5D-5062DB08CAAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D21A893-D406-48EA-9D5D-5062DB08CAAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D21A893-D406-48EA-9D5D-5062DB08CAAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D21A893-D406-48EA-9D5D-5062DB08CAAC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF98370B-AE1C-4A2E-8753-8F57C5F86694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF98370B-AE1C-4A2E-8753-8F57C5F86694}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF98370B-AE1C-4A2E-8753-8F57C5F86694}.Release|Any CPU.ActiveCfg = Release|Any CPU
