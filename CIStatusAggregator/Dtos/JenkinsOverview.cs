@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace CIStatusAggregator.Dtos
+﻿namespace CIStatusAggregator.Dtos
 {
 
     /// <summary>
-    /// Incoming DTO for the global overview of a Jenkins instance.
+    /// DTO for the global overview of a Jenkins instance.
     /// </summary>
-    public class JenkinsOverview
+    public record JenkinsOverview
     {
-        public IEnumerable<JenkinsJob> Jobs { get; set; } = Enumerable.Empty<JenkinsJob>();
+        public required IEnumerable<JenkinsJob> Jobs { get; init; }
     }
 
 }

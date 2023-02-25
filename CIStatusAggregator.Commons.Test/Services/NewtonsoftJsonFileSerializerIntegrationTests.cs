@@ -1,10 +1,9 @@
-﻿using System.IO;
-using CIStatusAggregator.Factories;
+﻿using CIStatusAggregator.Commons.Factories;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace CIStatusAggregator.Services
+namespace CIStatusAggregator.Commons.Services
 {
 
     [Trait("TestType", "Integration")]
@@ -21,20 +20,41 @@ namespace CIStatusAggregator.Services
 
 
         [Fact]
-        public void Serialize_SerializationExample_CreatesExpectedFile()
+        public void Deserialize_NonExisting_IsExpected()
+        {
+            var filePath = "NonExistingFile";
+            var sut = new NewtonsoftJsonFileSerializer<SerializationExample>(filePath, Settings);
+            var result = sut.Deserialize();
+            result.Should().BeNull();
+        }
+
+
+        [Fact]
+        public void Deserialize_SerializationExample_IsExpected()
+        {
+            var filePath = "SerializationExample.input.json";
+            var sut = new NewtonsoftJsonFileSerializer<SerializationExample>(filePath, Settings);
+            var expected = new SerializationExample();
+            var result = sut.Deserialize();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+
+        [Fact]
+        public void Serialize_SerializationExample_CreatesExpected()
         {
             var inputPath = "SerializationExample.input.json";
             var outputPath = "SerializationExample.output.json";
             File.Delete(outputPath);
 
             File.Exists(outputPath).Should().BeFalse();
-            var sut = new NewtonsoftJsonFileSerializer(outputPath, Settings);
+            var sut = new NewtonsoftJsonFileSerializer<SerializationExample>(outputPath, Settings);
             sut.Serialize(new SerializationExample());
             File.Exists(outputPath).Should().BeTrue();
 
             var inputText = File.ReadAllText(inputPath);
             var outputText = File.ReadAllText(outputPath);
-            outputText.Should().BeEquivalentTo(inputText);
+            outputText.Should().Be(inputText);
         }
 
 

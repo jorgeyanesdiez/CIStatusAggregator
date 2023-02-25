@@ -1,6 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using CIStatusAggregator.Factories;
+﻿using CIStatusAggregator.Commons.Factories;
+using CIStatusAggregator.Commons.Services;
 using CIStatusAggregator.Models;
 using CIStatusAggregator.Services;
 using CIStatusAggregator.Settings;
@@ -49,17 +48,18 @@ namespace CIStatusAggregator
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    var appSettings = hostContext.Configuration.Get<AppSettings>().CIStatusAggregator;
-
                     var serializerSettings = NewtonsoftJsonSerializerSettingsFactory.Build();
+                    FlurlHttp.Configure(s => s.JsonSerializer = new NewtonsoftJsonSerializer(serializerSettings));
+
+                    var appSettings = hostContext.Configuration.Get<AppSettings>()?.CIStatusAggregator
+                        ?? throw new InvalidOperationException("The application settings could not be read");
+
                     appSettings.Endpoints.ForEach(endpoint => services.AddSingleton(sp => new CIStatusAggregatorItem()
                     {
                         Description = endpoint.Meta.Description,
                         RemoteProcessor = new JenkinsStatusProvider(endpoint.Remote),
-                        LocalProcessor = new NewtonsoftJsonFileSerializer(endpoint.Local.StatusFilePath, serializerSettings)
+                        LocalProcessor = new NewtonsoftJsonFileSerializer<CIStatus>(endpoint.Local.StatusFilePath, serializerSettings)
                     }));
-
-                    FlurlHttp.Configure(s => s.JsonSerializer = new NewtonsoftJsonSerializer(serializerSettings));
 
                     services.AddHostedService<CIStatusAggregatorService>();
                 })

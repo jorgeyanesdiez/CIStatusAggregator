@@ -1,6 +1,5 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using CIStatusAggregator.Models;
+﻿using CIStatusAggregator.Models;
+using CIStatusAggregator.Settings;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http.Testing;
@@ -13,7 +12,14 @@ namespace CIStatusAggregator.Services
     public class JenkinsStatusProviderIntegrationTests
     {
 
-        public static readonly string url = "http://localhost";
+        private static readonly string url = "http://localhost";
+
+
+        private static readonly EndpointRemoteSettings mockEndpointRemoteSettings = new()
+        {
+            BaseUrl = url,
+            JobNameFilter = null
+        };
 
 
         [Theory]
@@ -23,7 +29,7 @@ namespace CIStatusAggregator.Services
             var response = File.ReadAllText($"Jenkins.{partialName}.json");
             using var httpTest = new HttpTest();
             httpTest.RespondWith(response, 200);
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = await sut.GetStatus();
             result.ActivityStatus.Should().Be(CIActivityStatus.Idle);
             httpTest.ShouldHaveCalled(Url.Combine(url, "*"));
@@ -38,7 +44,7 @@ namespace CIStatusAggregator.Services
             var response = File.ReadAllText($"Jenkins.{partialName}.json");
             using var httpTest = new HttpTest();
             httpTest.RespondWith(response, 200);
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = await sut.GetStatus();
             result.ActivityStatus.Should().Be(CIActivityStatus.Building);
             httpTest.ShouldHaveCalled(Url.Combine(url, "*"));
@@ -52,7 +58,7 @@ namespace CIStatusAggregator.Services
             var response = File.ReadAllText($"Jenkins.{partialName}.json");
             using var httpTest = new HttpTest();
             httpTest.RespondWith(response, 200);
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = await sut.GetStatus();
             result.BuildStatus.Should().Be(CIBuildStatus.Stable);
             httpTest.ShouldHaveCalled(Url.Combine(url, "*"));
@@ -67,7 +73,7 @@ namespace CIStatusAggregator.Services
             var response = File.ReadAllText($"Jenkins.{partialName}.json");
             using var httpTest = new HttpTest();
             httpTest.RespondWith(response, 200);
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = await sut.GetStatus();
             result.BuildStatus.Should().Be(CIBuildStatus.Broken);
             httpTest.ShouldHaveCalled(Url.Combine(url, "*"));
@@ -80,7 +86,7 @@ namespace CIStatusAggregator.Services
             var response = File.ReadAllText("Jenkins.BlueYellowGrey.json");
             using var httpTest = new HttpTest();
             httpTest.RespondWith(response, 200);
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = await sut.GetJobColorsAsync();
             result.Should().Contain("blue", "yellow");
             result.Should().NotContain("grey");
@@ -94,11 +100,14 @@ namespace CIStatusAggregator.Services
             var response = File.ReadAllText("Jenkins.BlueYellowGrey.json");
             using var httpTest = new HttpTest();
             httpTest.RespondWith(response, 200);
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings()
+            var sut = new JenkinsStatusProvider(new EndpointRemoteSettings()
             {
                 BaseUrl = url,
-                JobNameFilterMode = RegexFilterMode.Blacklist,
-                JobNameFilterRegex = "JOB1"
+                JobNameFilter = new JobNameFilterSettings()
+                {
+                    Mode = RegexFilterMode.Blacklist,
+                    Regex = "JOB1"
+                }
             });
             var result = await sut.GetJobColorsAsync();
             result.Should().Contain("yellow");
@@ -114,11 +123,14 @@ namespace CIStatusAggregator.Services
             var response = File.ReadAllText("Jenkins.BlueYellowGrey.json");
             using var httpTest = new HttpTest();
             httpTest.RespondWith(response, 200);
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings()
+            var sut = new JenkinsStatusProvider(new EndpointRemoteSettings()
             {
                 BaseUrl = url,
-                JobNameFilterMode = RegexFilterMode.Whitelist,
-                JobNameFilterRegex = "JOB1"
+                JobNameFilter = new JobNameFilterSettings()
+                {
+                    Mode = RegexFilterMode.Whitelist,
+                    Regex = "JOB1"
+                }
             });
             var result = await sut.GetJobColorsAsync();
             result.Should().Contain("blue");

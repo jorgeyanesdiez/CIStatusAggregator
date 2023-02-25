@@ -4,9 +4,9 @@
     /// <summary>
     /// Settings for the meta part of an endpoint.
     /// </summary>
-    public class EndpointMetaSettings
+    public record EndpointMetaSettings
     {
-        public string Description { get; set; }
+        public required string Description { get; init; }
     }
 
 }

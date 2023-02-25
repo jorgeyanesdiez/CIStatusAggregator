@@ -3,13 +3,17 @@
   <PropertyGroup>
     <Authors>Jorge Yanes Diez</Authors>
     <Company>yanes.tech</Company>
-    <Description>Models used by CIStatusAggregator and all dependent applications.</Description>
+    <Description>Components shared by CIStatusAggregator for any dependent applications.</Description>
     <PackageProjectUrl>https://github.com/jorgeyanesdiez/CIStatusAggregator/</PackageProjectUrl>
-    <Version>2.0.0</Version>
+    <Version>1.0.0</Version>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
 
 </Project>

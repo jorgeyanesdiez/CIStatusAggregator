@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace CIStatusAggregator.Factories
+namespace CIStatusAggregator.Commons.Factories
 {
 
     /// <summary>
@@ -12,13 +12,14 @@ namespace CIStatusAggregator.Factories
     {
 
         /// <summary>
-        /// Builds an object that represents the desired settings for Newtonsoft.Json serializers.
+        /// Builds the desired settings object for projects using the classes in this namespace.
         /// </summary>
-        /// <returns>The requested object.</returns>
+        /// <returns>The requested settings.</returns>
         public static JsonSerializerSettings Build()
         {
             var jsonSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            jsonSettings.Converters.Add(new StringEnumConverter());
+            jsonSettings.Converters.Add(new StringEnumConverter(typeof(CamelCaseNamingStrategy)));
+            jsonSettings.Formatting = Formatting.Indented;
             return jsonSettings;
         }
 

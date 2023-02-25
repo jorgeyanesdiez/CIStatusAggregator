@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CIStatusAggregator.Models;
+﻿using CIStatusAggregator.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -47,10 +42,9 @@ namespace CIStatusAggregator.Services
             IEnumerable<CIStatusAggregatorItem> items
         )
         {
-            AppLifetime = appLifetime ?? throw new ArgumentNullException(nameof(appLifetime));
-            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            Items = items ?? throw new ArgumentNullException(nameof(items));
-            if (!items.Any()) { throw new ArgumentOutOfRangeException(nameof(items)); }
+            AppLifetime = appLifetime;
+            Logger = logger;
+            Items = items;
         }
 
 

@@ -4,9 +4,9 @@
     /// <summary>
     /// Settings for the local part of an endpoint.
     /// </summary>
-    public class EndpointLocalSettings
+    public record EndpointLocalSettings
     {
-        public string StatusFilePath { get; set; }
+        public required string StatusFilePath { get; init; }
     }
 
 }

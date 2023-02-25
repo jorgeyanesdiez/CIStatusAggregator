@@ -1,5 +1,5 @@
-﻿using System;
-using CIStatusAggregator.Models;
+﻿using CIStatusAggregator.Models;
+using CIStatusAggregator.Settings;
 using FluentAssertions;
 using Xunit;
 
@@ -10,30 +10,20 @@ namespace CIStatusAggregator.Services
     public class JenkinsStatusProviderUnitTests
     {
 
-        public static readonly string url = "http://localhost";
+        private static readonly string url = "http://localhost";
 
 
-        [Fact]
-        public void Constructor_Null_Throws()
+        private static readonly EndpointRemoteSettings mockEndpointRemoteSettings = new()
         {
-            Action action = () => new JenkinsStatusProvider(null);
-            action.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-
-        [Theory]
-        [InlineData("invalidUri")]
-        public void Constructor_Invalid_Throws(string invalidUri)
-        {
-            Action action = () => new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = invalidUri });
-            action.Should().ThrowExactly<UriFormatException>();
-        }
+            BaseUrl = url,
+            JobNameFilter = null
+        };
 
 
         [Fact]
         public void GetActivityStatus_Empty_IsExpected()
         {
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = sut.GetActivityStatus(Array.Empty<string>());
             result.Should().Be(CIActivityStatus.Idle);
         }
@@ -50,7 +40,7 @@ namespace CIStatusAggregator.Services
         [InlineData("UNEXPECTED")]
         public void GetActivityStatus_RegularColors_IsExpected(string regularColor)
         {
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = sut.GetActivityStatus(new[] { regularColor });
             result.Should().Be(CIActivityStatus.Idle);
         }
@@ -67,7 +57,7 @@ namespace CIStatusAggregator.Services
         [InlineData("UNEXPECTED_anime")]
         public void GetActivityStatus_AnimatedColors_IsExpected(string animatedColor)
         {
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = sut.GetActivityStatus(new[] { animatedColor });
             result.Should().Be(CIActivityStatus.Building);
         }
@@ -78,7 +68,7 @@ namespace CIStatusAggregator.Services
         [InlineData("UNEXPECTED", "UNEXPECTED_anime")]
         public void GetActivityStatus_MixedColors_IsExpected(string regularColor, string animatedColor)
         {
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = sut.GetActivityStatus(new[] { regularColor, animatedColor });
             result.Should().Be(CIActivityStatus.Building);
         }
@@ -87,7 +77,7 @@ namespace CIStatusAggregator.Services
         [Fact]
         public void GetBuildStatus_Empty_IsExpected()
         {
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = sut.GetBuildStatus(Array.Empty<string>());
             result.Should().Be(CIBuildStatus.Stable);
         }
@@ -98,7 +88,7 @@ namespace CIStatusAggregator.Services
         [InlineData("blue_anime")]
         public void GetBuildStatus_StableColors_IsExpected(string stableColor)
         {
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = sut.GetBuildStatus(new[] { stableColor });
             result.Should().Be(CIBuildStatus.Stable);
         }
@@ -121,7 +111,7 @@ namespace CIStatusAggregator.Services
         [InlineData("UNEXPECTED_anime")]
         public void GetBuildStatus_BrokenColors_IsExpected(string brokenColor)
         {
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = sut.GetBuildStatus(new[] { brokenColor });
             result.Should().Be(CIBuildStatus.Broken);
         }
@@ -133,7 +123,7 @@ namespace CIStatusAggregator.Services
         [InlineData("UNEXPECTED", "UNEXPECTED_anime")]
         public void GetBuildStatus_MixedColors_IsExpected(string regularColor, string animatedColor)
         {
-            var sut = new JenkinsStatusProvider(new Settings.EndpointRemoteSettings() { BaseUrl = url });
+            var sut = new JenkinsStatusProvider(mockEndpointRemoteSettings);
             var result = sut.GetBuildStatus(new[] { regularColor, animatedColor });
             result.Should().Be(CIBuildStatus.Broken);
         }

@@ -1,26 +1,24 @@
-﻿using System;
-using System.IO;
-using CIStatusAggregator.Abstractions;
+﻿using CIStatusAggregator.Commons.Abstractions;
 using Newtonsoft.Json;
 
-namespace CIStatusAggregator.Services
+namespace CIStatusAggregator.Commons.Services
 {
 
     /// <summary>
     /// File serializer using Newtonsoft.Json
     /// </summary>
-    public class NewtonsoftJsonFileSerializer
-        : ISerializer
+    public class NewtonsoftJsonFileSerializer<TObject>
+        : IFileSerializer<TObject>
     {
 
         /// <summary>
-        /// The path for the serialization operations of this instance.
+        /// The path to the backing file for this instance.
         /// </summary>
         private string FilePath { get; }
 
 
         /// <summary>
-        /// The settings used during serialization.
+        /// The settings used during serialization and deserialization.
         /// </summary>
         private JsonSerializerSettings Settings { get; }
 
@@ -41,7 +39,25 @@ namespace CIStatusAggregator.Services
 
 
         /// <inheritdoc/>
-        public void Serialize<TObject>(TObject input) where TObject : new()
+        public TObject? Deserialize()
+        {
+            TObject? result;
+            try
+            {
+                using var reader = new StreamReader(FilePath);
+                var contents = reader.ReadToEnd();
+                result = JsonConvert.DeserializeObject<TObject>(contents, Settings);
+            }
+            catch (Exception e) when (e is FileNotFoundException || e is JsonReaderException)
+            {
+                result = default;
+            }
+            return result;
+        }
+
+
+        /// <inheritdoc/>
+        public void Serialize(TObject input)
         {
             var contents = JsonConvert.SerializeObject(input, Settings);
             using var writer = new StreamWriter(FilePath);

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CIStatusAggregator.Abstractions;
+﻿using CIStatusAggregator.Abstractions;
+using CIStatusAggregator.Commons.Abstractions;
 using CIStatusAggregator.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Hosting;
@@ -18,60 +15,12 @@ namespace CIStatusAggregator.Services
     {
 
         [Fact]
-        public void Constructor_NullAppLifetime_Throws()
-        {
-            Action action = () => new CIStatusAggregatorService(
-                null,
-                Mock.Of<ILogger<CIStatusAggregatorService>>(),
-                new[] { new CIStatusAggregatorItem() }
-            );
-            action.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-
-        [Fact]
-        public void Constructor_NullLogger_Throws()
-        {
-            Action action = () => new CIStatusAggregatorService(
-                Mock.Of<IHostApplicationLifetime>(),
-                null,
-                new[] { new CIStatusAggregatorItem() }
-            );
-            action.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-
-        [Fact]
-        public void Constructor_NullItems_Throws()
-        {
-            Action action = () => new CIStatusAggregatorService(
-                Mock.Of<IHostApplicationLifetime>(),
-                Mock.Of<ILogger<CIStatusAggregatorService>>(),
-                null
-            );
-            action.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-
-        [Fact]
-        public void Constructor_EmptyItems_Throws()
-        {
-            Action action = () => new CIStatusAggregatorService(
-                Mock.Of<IHostApplicationLifetime>(),
-                Mock.Of<ILogger<CIStatusAggregatorService>>(),
-                Enumerable.Empty<CIStatusAggregatorItem>()
-            );
-            action.Should().ThrowExactly<ArgumentOutOfRangeException>();
-        }
-
-
-        [Fact]
         public async Task StartAsync_CallsExpected()
         {
             var appLifetimeMock = new Mock<IHostApplicationLifetime>();
             var loggerMock = Mock.Of<ILogger<CIStatusAggregatorService>>();
             var mockRemoteProcessorMock = new Mock<IStatusProvider<Task<CIStatus>>>();
-            var mockLocalProcessorMock = new Mock<ISerializer>();
+            var mockLocalProcessorMock = new Mock<IFileSerializer<CIStatus>>();
             var items = new[] { new CIStatusAggregatorItem()
             {
                 Description = "Mock item",
@@ -80,7 +29,7 @@ namespace CIStatusAggregator.Services
             }};
 
             appLifetimeMock.Setup(m => m.StopApplication()).Verifiable();
-            mockRemoteProcessorMock.Setup(m => m.GetStatus()).ReturnsAsync(new CIStatus()).Verifiable();
+            mockRemoteProcessorMock.Setup(m => m.GetStatus()).Verifiable();
             mockLocalProcessorMock.Setup(m => m.Serialize(It.IsAny<CIStatus>())).Verifiable();
 
             var sut = new CIStatusAggregatorService(
@@ -103,7 +52,7 @@ namespace CIStatusAggregator.Services
             var appLifetimeMock = Mock.Of<IHostApplicationLifetime>();
             var loggerMock = Mock.Of<ILogger<CIStatusAggregatorService>>();
             var mockRemoteProcessorMock = new Mock<IStatusProvider<Task<CIStatus>>>();
-            var mockLocalProcessorMock = Mock.Of<ISerializer>();
+            var mockLocalProcessorMock = Mock.Of<IFileSerializer<CIStatus>>();
             var items = new[] { new CIStatusAggregatorItem()
             {
                 Description = "Mock item",

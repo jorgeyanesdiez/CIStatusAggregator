@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using CIStatusAggregator.Abstractions;
+﻿using CIStatusAggregator.Abstractions;
+using CIStatusAggregator.Commons.Abstractions;
 
 namespace CIStatusAggregator.Models
 {
@@ -7,25 +7,25 @@ namespace CIStatusAggregator.Models
     /// <summary>
     /// Represents the components required to process each defined endpoint.
     /// </summary>
-    public class CIStatusAggregatorItem
+    public record CIStatusAggregatorItem
     {
 
         /// <summary>
         /// Arbitrary description of this item.
         /// </summary>
-        public string Description { get; set; }
+        public required string Description { get; init; }
 
 
         /// <summary>
         /// Service to process the remote part of the endpoint.
         /// </summary>
-        public IStatusProvider<Task<CIStatus>> RemoteProcessor { get; set; }
+        public required IStatusProvider<Task<CIStatus>> RemoteProcessor { get; init; }
 
 
         /// <summary>
         /// Service to process the local part of the endpoint.
         /// </summary>
-        public ISerializer LocalProcessor { get; set; }
+        public required IFileSerializer<CIStatus> LocalProcessor { get; init; }
 
     }
 

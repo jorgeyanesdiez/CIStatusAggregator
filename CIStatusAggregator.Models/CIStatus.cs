@@ -4,19 +4,19 @@
     /// <summary>
     /// Models the status of a CI system.
     /// </summary>
-    public class CIStatus
+    public record CIStatus
     {
 
         /// <summary>
         /// The activity status of the CI system.
         /// </summary>
-        public CIActivityStatus ActivityStatus { get; set; }
+        public required CIActivityStatus ActivityStatus { get; init; }
 
 
         /// <summary>
         /// The build status of the CI system.
         /// </summary>
-        public CIBuildStatus BuildStatus { get; set; }
+        public required CIBuildStatus BuildStatus { get; init; }
 
     }
 

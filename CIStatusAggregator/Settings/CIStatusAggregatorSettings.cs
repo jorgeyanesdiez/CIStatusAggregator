@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-
-namespace CIStatusAggregator.Settings
+﻿namespace CIStatusAggregator.Settings
 {
 
     /// <summary>
     /// Settings for the application.
     /// </summary>
-    public class CIStatusAggregatorSettings
+    public record CIStatusAggregatorSettings
     {
-        public List<EndpointSettings> Endpoints { get; set; } = new List<EndpointSettings>();
+        public required List<EndpointSettings> Endpoints { get; init; }
     }
 
 }

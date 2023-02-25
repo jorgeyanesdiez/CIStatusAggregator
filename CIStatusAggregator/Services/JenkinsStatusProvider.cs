@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using CIStatusAggregator.Abstractions;
 using CIStatusAggregator.Dtos;
 using CIStatusAggregator.Models;
@@ -32,8 +28,7 @@ namespace CIStatusAggregator.Services
         /// <param name="endpointRemoteSettings">The value for the <see cref="EndpointRemoteSettings"/> property.</param>
         public JenkinsStatusProvider(EndpointRemoteSettings endpointRemoteSettings)
         {
-            EndpointRemoteSettings = endpointRemoteSettings ?? throw new ArgumentNullException(nameof(endpointRemoteSettings));
-            _ = new Uri(EndpointRemoteSettings.BaseUrl); // Eagerly raise an exception if the URI is invalid.
+            EndpointRemoteSettings = endpointRemoteSettings;
         }
 
 
@@ -57,7 +52,7 @@ namespace CIStatusAggregator.Services
         /// <returns>The requested activity status.</returns>
         public CIActivityStatus GetActivityStatus(IEnumerable<string> colors)
         {
-            var status = colors.Any(c => c.EndsWith("anime")) ? CIActivityStatus.Building : CIActivityStatus.Idle;
+            var status = colors.Any(color => color.EndsWith("anime")) ? CIActivityStatus.Building : CIActivityStatus.Idle;
             return status;
         }
 
@@ -69,7 +64,7 @@ namespace CIStatusAggregator.Services
         /// <returns>The requested build status.</returns>
         public CIBuildStatus GetBuildStatus(IEnumerable<string> colors)
         {
-            var status = colors.Any(c => !c.StartsWith("blue")) ? CIBuildStatus.Broken : CIBuildStatus.Stable;
+            var status = colors.Any(color => !color.StartsWith("blue")) ? CIBuildStatus.Broken : CIBuildStatus.Stable;
             return status;
         }
 
@@ -81,24 +76,24 @@ namespace CIStatusAggregator.Services
         /// <returns>The collection of colors.</returns>
         public async Task<IEnumerable<string>> GetJobColorsAsync()
         {
-            var r = RegexOptions.None;
-            var t = TimeSpan.FromSeconds(1);
+            var opts = RegexOptions.None;
+            var timeout = TimeSpan.FromSeconds(1);
 
             var baseUri = new Uri(EndpointRemoteSettings.BaseUrl);
             var endpoint = new Uri(baseUri, "/api/json").ToString();
-            var response = await endpoint.WithTimeout(5).GetJsonAsync<JenkinsOverview>();
+            var response = await endpoint.WithTimeout(timeout).GetJsonAsync<JenkinsOverview>();
             var jobs = response.Jobs;
 
-            if (!string.IsNullOrWhiteSpace(EndpointRemoteSettings.JobNameFilterRegex))
+            if (EndpointRemoteSettings.JobNameFilter != null)
             {
-                Func<string, string, bool> jobFilter = EndpointRemoteSettings.JobNameFilterMode == RegexFilterMode.Blacklist
-                    ? (i, p) => !Regex.IsMatch(i, p, r, t)
-                    : (i, p) => Regex.IsMatch(i, p, r, t);
+                Func<string, string, bool> jobFilter = EndpointRemoteSettings.JobNameFilter.Mode == RegexFilterMode.Blacklist
+                    ? (input, pattern) => !Regex.IsMatch(input, pattern, opts, timeout)
+                    : (input, pattern) => Regex.IsMatch(input, pattern, opts, timeout);
 
-                jobs = jobs.Where(j => jobFilter(j.Name, EndpointRemoteSettings.JobNameFilterRegex));
+                jobs = jobs.Where(job => jobFilter(job.Name, EndpointRemoteSettings.JobNameFilter.Regex));
             }
 
-            var colors = jobs.Select(j => j.Color).Where(c => !Regex.IsMatch(c, "^(grey|disabled|aborted|notbuilt)", r, t));
+            var colors = jobs.Select(job => job.Color).Where(color => !Regex.IsMatch(color, "^(grey|disabled|aborted|notbuilt)", opts, timeout));
             return colors;
         }
 

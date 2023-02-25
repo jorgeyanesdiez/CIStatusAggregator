@@ -5,5 +5,5 @@ packages/
 release/
 **/bin/
 **/obj/
+**/TestResults/
 **/*.user
-coverage.xml

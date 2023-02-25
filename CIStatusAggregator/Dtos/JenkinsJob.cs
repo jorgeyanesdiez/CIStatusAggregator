@@ -2,12 +2,12 @@
 {
 
     /// <summary>
-    /// Incoming DTO for a Jenkins job.
+    /// DTO for a Jenkins job.
     /// </summary>
-    public class JenkinsJob
+    public record JenkinsJob
     {
-        public string Name { get; set; }
-        public string Color { get; set; }
+        public required string Name { get; init; }
+        public required string Color { get; init; }
     }
 
 }

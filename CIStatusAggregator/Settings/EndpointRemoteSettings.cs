@@ -1,16 +1,13 @@
-﻿using CIStatusAggregator.Models;
-
-namespace CIStatusAggregator.Settings
+﻿namespace CIStatusAggregator.Settings
 {
 
     /// <summary>
     /// Settings for the remote part of an endpoint.
     /// </summary>
-    public class EndpointRemoteSettings
+    public record EndpointRemoteSettings
     {
-        public string BaseUrl { get; set; }
-        public string JobNameFilterRegex { get; set; }
-        public RegexFilterMode JobNameFilterMode { get; set; }
+        public required string BaseUrl { get; init; }
+        public required JobNameFilterSettings? JobNameFilter { get; init; }
     }
 
 }
