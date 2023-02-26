@@ -93,19 +93,24 @@ Each endpoint definition has the following properties:
   Base URL of the CI system to check.
 
 
-* **Endpoint** -> **Remote** -> ***JobNameFilterRegex***
+* **Endpoint** -> **Remote** -> ***JobNameFilter***
 
-  Optional regular expression that can be used to filter the jobs that are aggregated.
+  Optional section that can be used to filter the jobs that are aggregated.
 
 
-* **Endpoint** -> **Remote** -> ***JobNameFilterMode***
+* **Endpoint** -> **Remote** -> **JobNameFilter** -> ***Mode***
 
-  Only applicable when *JobNameFilterRegex* is defined. May be *Blacklist* or *Whitelist*.
+  May be *Blacklist* or *Whitelist*.
 
-  When *Blacklist*, all jobs that match *JobNameFilterRegex* are excluded from the result.
+  When *Blacklist*, all jobs that match the value for *Regex* in this section are excluded from the result.
 
-  When *Whitelist*, only jobs that match *JobNameFilterRegex* are included in the result.
+  When *Whitelist*, only jobs that match the value for *Regex* in this section are included in the result.
 
+
+* **Endpoint** -> **Remote** -> **JobNameFilter** -> ***Regex***
+
+  Regular expression that is matched against job names to act as a filter.
+  
 
 * **Endpoint** -> **Local** -> ***StatusFilePath***
 
@@ -126,8 +131,10 @@ Each endpoint definition has the following properties:
     },
     "Remote": {
       "BaseUrl": "https://jenkins.example",
-      "JobNameFilterRegex": "build",
-      "JobNameFilterMode": "Whitelist"
+      "JobNameFilter": {
+        "Mode": "Whitelist"
+        "Regex": "build",
+      }
     },
     "Local": {
       "StatusFilePath": "status/build.json"
@@ -148,8 +155,10 @@ Each endpoint definition has the following properties:
     },
     "Remote": {
       "BaseUrl": "https://jenkins.example",
-      "JobNameFilterRegex": "build",
-      "JobNameFilterMode": "Blacklist"
+      "JobNameFilter": {
+        "Mode": "Blacklist"
+        "Regex": "build",
+      }
     },
     "Local": {
       "StatusFilePath": "status/deploy.json"
